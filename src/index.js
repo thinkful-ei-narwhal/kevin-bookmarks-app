@@ -1,10 +1,28 @@
-import $ from 'jquery';
+import $ from "jquery";
+import api from './api';
+import bookmarksApp from "./bookmarksApp"
+import store from "./store";
 
-function main() {
-  console.log('DOM is loaded');
+import "./index.css";
 
-  const startMsg = $('<p>Webpack is working!</p>');
-  $('#root').append(startMsg);
-}
+const main = function () {
+  api.getBookmarks()
+    .then((bookmarks) => {
+      bookmarks.forEach((bookmark) => store.addBookmark(bookmark));
+      bookmarksApp.render();
+    });
+
+  bookmarksApp.bindEventListeners();
+  bookmarksApp.render();
+};
 
 $(main);
+
+// $(document).ready(function(){
+//   $(".rating input:radio").attr("checked", false);
+
+//   $('.rating input').click(function () {
+//       $(".rating span").removeClass('checked');
+//       $(this).parent().addClass('checked');
+//   });
+// });

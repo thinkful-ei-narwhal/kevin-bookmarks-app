@@ -1,0 +1,95 @@
+* {
+  box-sizing: border-box;
+}
+header {
+  text-align: center;
+}
+main {
+  text-align: center;
+}
+.condensed {
+  display: flex;
+  justify-content: space-around;
+}
+.expand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30%;
+  padding: 0px;
+  height: fit-content;
+}
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30%;
+  height: fit-content;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+.display-rating {
+  height: fit-content;
+  width: 30%;
+}
+.fa-star {
+  display: inline-block;
+  font-size: 10px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  color: lightgray;
+}
+.checked {
+  color: orange;
+}
+.details {
+  padding: 0 18px;
+  display: block;
+  overflow: hidden;
+  background-color: #f1f1f1;
+  clear: both;
+}
+/* .rating {
+  width: fit-content;
+  margin-right: auto;
+  margin-left: auto;
+}
+.rating span {
+  float:right;
+}
+.display-rating {
+  float:right;
+}
+.rating span input {
+  position:absolute;
+  top:0px;
+  left:0px;
+  opacity:0;
+  font-size: 14px;
+}
+.rating span label {
+  display:inline-block;
+  width:30px;
+  height:30px;
+  text-align:center;
+  color:#FFF;
+  background:#ccc;
+  font-size:14x;
+  margin-right:2px;
+  line-height:30px;
+  border-radius:50%;
+  -webkit-border-radius:50%;
+}
+.rating span:hover ~ span label,
+.rating span:hover label,
+.rating span.checked label,
+.rating span.checked ~ span label {
+  background:#F90;
+  color:#FFF;
+} */
+#description {
+  display: block;
+}
+#title {
+  display: block;
+}
