@@ -31,32 +31,32 @@ const generateAddingBookmark = function() {
   return `
   <form class = "add-bookmark">
     <label for="bookmark-url">Add New Bookmark:</label>
-    <input type="url" class="new-bookmark-url" id="new-bookmark-url" name="new-bookmark-url" placeholder="http://example.com/" required>
-    <input type="text" class="new-bookmark-title" id="new-bookmark-title" name="new-bookmark-title" placeholder="Add a Title" required>
+    <input type="url" class="bookmark-url" id="new-bookmark-url" name="new-bookmark-url" placeholder="http://example.com/" required>
+    <input type="text" class="bookmark-title" id="new-bookmark-title" name="new-bookmark-title" placeholder="Add a Title" required>
     <div class="rating">
       <span>
-        <input type="radio" name="rating" id="str5" value="5">
+        <input type="radio" name="rating" id="str5" value="5" required>
         <label for="str5">5</label>
       </span>
       <span>
-        <input type="radio" name="rating" id="str4" value="4">
+        <input type="radio" name="rating" id="str4" value="4" required>
         <label for="str4">4</label>
       </span>
       <span>
-        <input type="radio" name="rating" id="str3" value="3">
+        <input type="radio" name="rating" id="str3" value="3" required>
         <label for="str3">3</label>
       </span>
       <span>
-        <input type="radio" name="rating" id="str2" value="2">
+        <input type="radio" name="rating" id="str2" value="2" required>
         <label for="str2">2</label>
       </span>
       <span>
-        <input type="radio" name="rating" id="str1" value="1">
+        <input type="radio" name="rating" id="str1" value="1" required>
         <label for="str1">1</label>
       </span>
       <span class="rating-descriptor">Rating:</span>
     </div>
-    <input type="text" class="new-bookmark-desc" id="new-bookmark-desc" name="new-bookmark-desc" placeholder="Add a description (optional)">
+    <input type="text" class="bookmark-desc" id="new-bookmark-desc" name="new-bookmark-desc" placeholder="Add a description" required>
     <button type="button" class="cancel" id="cancel">Cancel</button>
     <input type="submit" class="add-bookmark" id="add-bookmark" value="Save">
   </form>`
@@ -70,21 +70,19 @@ const generateInteractiveStarRating = function (bookmark) {
   for (let i=5; i>rating; i--) {
     uncheckedStars += `
       <span>
-        <input type="radio" name="rating" id="str${i}" value="${i}">
+        <input type="radio" name="rating" id="str${i}" value="${i}" required>
         <label for="str${i}"></label>
       </span>`
   }
-  for (let i=rating; i=rating; i--){
     defaultStar = `
     <span>
-      <input class="checked" type="radio" name="rating" id="str${i}" value="${i}">
-      <label for="str${i}"></label>
+      <input class="checked" type="radio" name="rating" id="str${rating}" value="${rating}" checked required>
+      <label for="str${rating}"></label>
     </span>`
-  }
   for (let i=rating-1; i>0; i--) {
     checkedStars += `
       <span>
-        <input class="checked" type="radio" name="rating" id="str${i}" value="${i}">
+        <input class="checked" type="radio" name="rating" id="str${i}" value="${i}" required>
         <label for="str${i}"></label>
       </span>`
   }
@@ -93,18 +91,19 @@ const generateInteractiveStarRating = function (bookmark) {
 
 const generateEditingBookmark = function() {
   let id = store.editing.id;
+  console.log(store.findById(id).title);
   return `
-    <form class = "editing-bookmark" id="id">
+    <form class = "editing-bookmark bookmark" data-bookmark-id="${id}">
       <label for="bookmark-url">Edit Bookmark</label>
-      <input type="url" id="bookmark-url" name="bookmark-url" default="${store.findById(id).url}" required>
-      <input type="text" name="title" id="title" default="${store.findById(id).title}">
+      <input type="url" class="bookmark-url" id="bookmark-url" name="bookmark-url" value="${store.findById(id).url}" required>
+      <input type="text" name="title" class="bookmark-title" id="bookmark-title" value="${store.findById(id).title}" required>
       <div class="rating">
         ${generateInteractiveStarRating(store.findById(id))}
         <span class="rating-descriptor">Rating:</span>
       </div>
-      <input type="text" id="description" name="description" placeholder="${store.findById.desc}">
+        <input type="text" class="bookmark-desc" id="bookmark-desc" name="description" value="${store.findById(id).desc}" required>
       <button type="button" class="cancel" id="cancel">Cancel</button>
-      <input type="submit" class="submit" id="update-bookmark" value="Save">
+      <input type="submit" class="update-bookmark" id="update-bookmark" value="Save">
     </form>`
 }
 
@@ -126,8 +125,8 @@ const generateBookmarkElement = function (bookmark) {
   let id = store.expanded;
   if (id === bookmark.id) {
     return `
-      <div class = "bookmark" data-bookmark-id="${store.findById(id).id}>
-        <div class = "condensed">
+      <div class = "bookmark" data-bookmark-id="${store.findById(id).id}">
+        <div class="condensed">
           <button type = "button" id='collapse'>-</button>
           <p class = "title">${store.findById(id).title}</p>
           <div class = "display-rating">
@@ -137,8 +136,8 @@ const generateBookmarkElement = function (bookmark) {
         <div class = "details">
           <a href="${store.findById(id).url}" target="_blank">Visit Site</a>
           <p>${store.findById(id).desc}</p>
-          <button type="button" id="edit">Edit</button>
-          <button type="button" class="delete" id="delete">Delete</button>
+          <button type="button" class="edit">Edit</button>
+          <button type="button" class="delete">Delete</button>
         </div>
       </div>`;
   } else {
@@ -167,11 +166,11 @@ const generateMainView = function(bookmarks) {
       <input id="add-new" type="button" value="New Bookmark">
       <label for="filter">Filter:</label>
       <select name="filter" id="filter">
+        <option value="0">Show All</option>
         <option value="5">5 Stars</option>
         <option value="4">4+ Stars</option>
         <option value="3">3+ Stars</option>
         <option value="2">2+ Stars</option>
-        <option value="0" selected>Show All</option>
       </select>
     </form>
     ${generateAllElements(bookmarks)}
@@ -183,11 +182,10 @@ const render = function() {
 
   let bookmarks = [...store.bookmarks];
   bookmarks = bookmarks.filter(bookmark => bookmark.rating >= store.filter);
-  console.log(store.bookmarks);
 
   if (store.adding === true) {
     $("main").html(generateAddingBookmark());
-  } else if (store.editing === true) {
+  } else if (store.editing.editing === true) {
     $("main").html(generateEditingBookmark());
   } else {
     $("main").html(generateMainView(bookmarks));
@@ -228,26 +226,23 @@ const handleExpandButton = function() {
   $("body").on('click', '#expand', event => {
     event.preventDefault();
     store.expanded = getBookmarkIdFromElement(event.currentTarget);
-    console.log(store.expanded);
     render();
   });
 }
 
 const handleEditButton = function() {
-  $("body").on('click', '#edit', event => {
+  $("body").on('click', '.edit', event => {
     event.preventDefault();
     store.editing.id = getBookmarkIdFromElement(event.currentTarget);
     store.editing.editing = true;
-    console.log(store.editng);
     render();
   })
 }
 
 const handleDeleteButton = function() {
-  $("body").on('click', '#delete', event => {
+  $("body").on('click', '.delete', event => {
     event.preventDefault();
     const id = getBookmarkIdFromElement(event.currentTarget);
-    console.log(id);
     api.deleteBookmark(id)
       .then(() => {
         store.findAndDelete(id);
@@ -264,16 +259,15 @@ const handleDeleteButton = function() {
 const handleNewBookmarkSubmit = function() {
   $('body').on('submit', '.add-bookmark', event => {
     event.preventDefault();
-    console.log('button pressed');
     // try { 
     //   if ($('input[name="rating"]:checked').val() === undefined) throw "Rating is required";
     // } catch (e) {
     //   alert(e);
     // }
     const newBookmark = {};
-    newBookmark.title = $(".new-bookmark-title").val();
-    newBookmark.url = $(".new-bookmark-url").val();
-    newBookmark.desc = $(".new-bookmark-desc").val();
+    newBookmark.title = $(".bookmark-title").val();
+    newBookmark.url = $(".bookmark-url").val();
+    newBookmark.desc = $(".bookmark-desc").val();
     newBookmark.rating = $('input[name="rating"]:checked').val();
     api.createBookmark(newBookmark)
       .then((newBookmark) => {
@@ -291,24 +285,22 @@ const handleNewBookmarkSubmit = function() {
 };
 
 const handleUpdateBookmarkSubmit = function() {
-  $('body').on('submit', '.update-bookmark', event => {
+  $('body').on('submit', '.editing-bookmark', event => {
     event.preventDefault();
-    try { 
-      if ($('input[name="rating"]:checked').val() === undefined) throw "Rating is required";
-    } catch (e) {
-      alert(e);
-    }
     const id = getBookmarkIdFromElement(event.currentTarget);
-    
-    const newBookmark = {};
-    newBookmark.title = $(".new-bookmark-title").val();
-    newBookmark.url = $(".new-bookmark-url").val();
-    newBookmark.desc = $(".new-bookmark-desc").val();
-    newBookmark.rating = $('input[name="rating"]:checked').val();
+    const editedBookmark = {};
+    editedBookmark.title = $(".bookmark-title").val();
+    editedBookmark.url = $(".bookmark-url").val();
+    editedBookmark.desc = $(".bookmark-desc").val();
+    editedBookmark.rating = $('input[name="rating"]:checked').val();
 
-    api.updateItem(id, newBookmark)
+    console.log(editedBookmark);
+
+    api.updateBookmark(id, editedBookmark)
       .then(() => {
-        store.findAndUpdate(id, newBookmark);
+        store.findAndUpdate(id, editedBookmark);
+        store.editing.editing = false;
+
         render();
       })
       .catch((error) => {

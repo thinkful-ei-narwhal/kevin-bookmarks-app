@@ -22,7 +22,11 @@ function findAndUpdate(id, newData) {
 }
 
 const findAndDelete = function (id) {
-  this.items = this.items.filter(currentItem => currentItem.id !== id);
+  this.bookmarks = this.bookmarks.filter(currentBookmark => currentBookmark.id !== id);
+};
+
+const setError = function (error) {
+  this.error = error;
 };
 
 export default {
@@ -36,4 +40,5 @@ export default {
   addBookmark,
   findAndUpdate,
   findAndDelete,
+  setError,
 }
