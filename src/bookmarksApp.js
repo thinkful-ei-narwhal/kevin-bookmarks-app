@@ -34,27 +34,27 @@ const generateAddingBookmark = function() {
     <input type="url" class="bookmark-url" id="new-bookmark-url" name="new-bookmark-url" placeholder="http://example.com/" required>
     <input type="text" class="bookmark-title" id="new-bookmark-title" name="new-bookmark-title" placeholder="Add a Title" required>
     <div class="rating">
+      <span class="rating-descriptor">Rating:</span>
       <span>
-        <input type="radio" name="rating" id="str5" value="5" required>
-        <label for="str5">5</label>
+        <input type="radio" name="rating" id="str1" value="1" required>
+        <label for="str1">1</label>
       </span>
-      <span>
-        <input type="radio" name="rating" id="str4" value="4" required>
-        <label for="str4">4</label>
+        <span>
+        <input type="radio" name="rating" id="str2" value="2" required>
+        <label for="str2">2</label>
       </span>
       <span>
         <input type="radio" name="rating" id="str3" value="3" required>
         <label for="str3">3</label>
       </span>
       <span>
-        <input type="radio" name="rating" id="str2" value="2" required>
-        <label for="str2">2</label>
+        <input type="radio" name="rating" id="str4" value="4" required>
+        <label for="str4">4</label>
       </span>
       <span>
-        <input type="radio" name="rating" id="str1" value="1" required>
-        <label for="str1">1</label>
+        <input type="radio" name="rating" id="str5" value="5" required>
+        <label for="str5">5</label>
       </span>
-      <span class="rating-descriptor">Rating:</span>
     </div>
     <input type="text" class="bookmark-desc" id="new-bookmark-desc" name="new-bookmark-desc" placeholder="Add a description" required>
     <button type="button" class="cancel" id="cancel">Cancel</button>
@@ -62,31 +62,59 @@ const generateAddingBookmark = function() {
   </form>`
 }
 
+// const generateInteractiveStarRating = function (bookmark) {
+//   let rating = bookmark.rating;
+//   let uncheckedStars = '';
+//   let checkedStars = '';
+//   let defaultStar = '';
+//   for (let i=5; i>rating; i--) {
+//     checkedStars += `
+//       <span>
+//         <input type="radio" name="rating" id="str${i}" value="${i}" required>
+//         <label for="str${i}"></label>
+//       </span>`
+//   }
+//     defaultStar = `
+//     <span>
+//       <input class="checked" type="radio" name="rating" id="str${rating}" value="${rating}" checked required>
+//       <label for="str${rating}"></label>
+//     </span>`
+//   for (let i=rating-1; i>0; i--) {
+//     uncheckedStars += `
+//       <span>
+//         <input class="checked" type="radio" name="rating" id="str${i}" value="${i}" required>
+//         <label for="str${i}"></label>
+//       </span>`
+//   }
+//   return uncheckedStars + defaultStar + checkedStars;
+// }
+
 const generateInteractiveStarRating = function (bookmark) {
   let rating = bookmark.rating;
-  let uncheckedStars = '';
   let checkedStars = '';
+  let uncheckedStars = '';
   let defaultStar = '';
-  for (let i=5; i>rating; i--) {
+  for (let i=1; i<rating; i++) {
+    checkedStars += `
+    <span>
+      <input class="checked" type="radio" name="rating" id="str${i}" value="${i}" required>
+      <label for="str${i}">${i}</label>
+    </span>`
+  }
+  defaultStar = `
+    <span>
+      <input class="checked" type="radio" name="rating" id="str${rating}" value="${rating}" checked required>
+      <label for="str${rating}">${rating}</label>
+    </span>`
+  for (let i=rating+1; i<=5; i++) {
+    console.log('run');
     uncheckedStars += `
       <span>
         <input type="radio" name="rating" id="str${i}" value="${i}" required>
-        <label for="str${i}"></label>
+        <label for="str${i}">${i}</label>
       </span>`
   }
-    defaultStar = `
-    <span>
-      <input class="checked" type="radio" name="rating" id="str${rating}" value="${rating}" checked required>
-      <label for="str${rating}"></label>
-    </span>`
-  for (let i=rating-1; i>0; i--) {
-    checkedStars += `
-      <span>
-        <input class="checked" type="radio" name="rating" id="str${i}" value="${i}" required>
-        <label for="str${i}"></label>
-      </span>`
-  }
-  return uncheckedStars + defaultStar + checkedStars;
+  return checkedStars + defaultStar + uncheckedStars;
 }
 
 const generateEditingBookmark = function() {
@@ -98,8 +126,8 @@ const generateEditingBookmark = function() {
       <input type="url" class="bookmark-url" id="bookmark-url" name="bookmark-url" value="${store.findById(id).url}" required>
       <input type="text" name="title" class="bookmark-title" id="bookmark-title" value="${store.findById(id).title}" required>
       <div class="rating">
-        ${generateInteractiveStarRating(store.findById(id))}
         <span class="rating-descriptor">Rating:</span>
+        ${generateInteractiveStarRating(store.findById(id))}
       </div>
         <input type="text" class="bookmark-desc" id="bookmark-desc" name="description" value="${store.findById(id).desc}" required>
       <button type="button" class="cancel" id="cancel">Cancel</button>
@@ -259,11 +287,6 @@ const handleDeleteButton = function() {
 const handleNewBookmarkSubmit = function() {
   $('body').on('submit', '.add-bookmark', event => {
     event.preventDefault();
-    // try { 
-    //   if ($('input[name="rating"]:checked').val() === undefined) throw "Rating is required";
-    // } catch (e) {
-    //   alert(e);
-    // }
     const newBookmark = {};
     newBookmark.title = $(".bookmark-title").val();
     newBookmark.url = $(".bookmark-url").val();
@@ -321,8 +344,6 @@ const handleCancelButton = function() {
   });
 }
 
-// const handleRatingSystem = function() {
-
 
 const bindEventListeners = function() {
   handleAddBookmarkButton();
@@ -341,6 +362,3 @@ export default {
   render,
   bindEventListeners,
 }
-
-
-// have the editing in the store contain the the bolean and the id of the object being edited

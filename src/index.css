@@ -49,44 +49,7 @@ main {
   background-color: #f1f1f1;
   clear: both;
 }
-/* .rating {
-  width: fit-content;
-  margin-right: auto;
-  margin-left: auto;
-}
-.rating span {
-  float:right;
-}
-.display-rating {
-  float:right;
-}
-.rating span input {
-  position:absolute;
-  top:0px;
-  left:0px;
-  opacity:0;
-  font-size: 14px;
-}
-.rating span label {
-  display:inline-block;
-  width:30px;
-  height:30px;
-  text-align:center;
-  color:#FFF;
-  background:#ccc;
-  font-size:14x;
-  margin-right:2px;
-  line-height:30px;
-  border-radius:50%;
-  -webkit-border-radius:50%;
-}
-.rating span:hover ~ span label,
-.rating span:hover label,
-.rating span.checked label,
-.rating span.checked ~ span label {
-  background:#F90;
-  color:#FFF;
-} */
+
 #description {
   display: block;
 }
