@@ -62,64 +62,29 @@ const generateAddingBookmark = function() {
   </form>`
 }
 
-// const generateInteractiveStarRating = function (bookmark) {
-//   let rating = bookmark.rating;
-//   let uncheckedStars = '';
-//   let checkedStars = '';
-//   let defaultStar = '';
-//   for (let i=5; i>rating; i--) {
-//     checkedStars += `
-//       <span>
-//         <input type="radio" name="rating" id="str${i}" value="${i}" required>
-//         <label for="str${i}"></label>
-//       </span>`
-//   }
-//     defaultStar = `
-//     <span>
-//       <input class="checked" type="radio" name="rating" id="str${rating}" value="${rating}" checked required>
-//       <label for="str${rating}"></label>
-//     </span>`
-//   for (let i=rating-1; i>0; i--) {
-//     uncheckedStars += `
-//       <span>
-//         <input class="checked" type="radio" name="rating" id="str${i}" value="${i}" required>
-//         <label for="str${i}"></label>
-//       </span>`
-//   }
-//   return uncheckedStars + defaultStar + checkedStars;
-// }
-
 const generateInteractiveStarRating = function (bookmark) {
   let rating = bookmark.rating;
-  let checkedStars = '';
-  let uncheckedStars = '';
-  let defaultStar = '';
-  for (let i=1; i<rating; i++) {
-    checkedStars += `
-    <span>
-      <input class="checked" type="radio" name="rating" id="str${i}" value="${i}" required>
-      <label for="str${i}">${i}</label>
-    </span>`
-  }
-  defaultStar = `
-    <span>
-      <input class="checked" type="radio" name="rating" id="str${rating}" value="${rating}" checked required>
-      <label for="str${rating}">${rating}</label>
-    </span>`
-  for (let i=rating+1; i<=5; i++) {
-    console.log('run');
-    uncheckedStars += `
-      <span>
-        <input type="radio" name="rating" id="str${i}" value="${i}" required>
-        <label for="str${i}">${i}</label>
-      </span>`
-  }
-  return checkedStars + defaultStar + uncheckedStars;
+  let stars = '';
+  for (let i=1; i<=5; i++) {
+    if (i !== parseInt(rating)) {
+      stars +=`
+        <span>
+          <input type="radio" name="rating" id="str${i}" value="${i}" required>
+          <label for="str${i}">${i}</label>
+        </span>`
+    } else {
+        stars +=`
+          <span>
+          <input class="checked" type="radio" name="rating" id="str${rating}" value="${rating}" checked required>
+          <label for="str${rating}">${rating}</label>
+        </span>`
+      }
+    }
+  return stars;
 }
 
 const generateEditingBookmark = function() {
   let id = store.editing.id;
-  console.log(store.findById(id).title);
   return `
     <form class = "editing-bookmark bookmark" data-bookmark-id="${id}">
       <label for="bookmark-url">Edit Bookmark</label>
@@ -187,18 +152,42 @@ const generateAllElements = function (bookmarks) {
   return bookmark.join("");
 };
 
+const generateDropdown = function () {
+  let filter = store.filter;
+  const selections = [
+    { value: 0, selected: '', },
+    { value: 5, selected: '', },
+    { value: 4, selected: '', },
+    { value: 3, selected: '', },
+    { value: 2, selected: '', }
+  ];
+
+  selections.map(selection => {
+    if (selection.value === filter) {
+      selection.selected = 'selected';
+    }
+  });
+
+  let options = `
+  <option value="0" ${selections[0].selected}>Show All</option>
+  <option value="5" ${selections[1].selected}>5 Stars</option>
+  <option value="4" ${selections[2].selected}>4+ Stars</option>
+  <option value="3" ${selections[3].selected}>3+ Stars</option>
+  <option value="2" ${selections[4].selected}>2+ Stars</option>`;
+  console.log(selections);
+  console.log(options);
+  return options;
+};
+
+
 const generateMainView = function(bookmarks) {
   return `
   <div class = "initial-view">
     <form class = "initial-options">
       <input id="add-new" type="button" value="New Bookmark">
-      <label for="filter">Filter:</label>
+      <label for="filter"></label>
       <select name="filter" id="filter">
-        <option value="0">Show All</option>
-        <option value="5">5 Stars</option>
-        <option value="4">4+ Stars</option>
-        <option value="3">3+ Stars</option>
-        <option value="2">2+ Stars</option>
+        ${generateDropdown()}
       </select>
     </form>
     ${generateAllElements(bookmarks)}
@@ -294,7 +283,6 @@ const handleNewBookmarkSubmit = function() {
     newBookmark.rating = $('input[name="rating"]:checked').val();
     api.createBookmark(newBookmark)
       .then((newBookmark) => {
-        console.log(newBookmark);
         store.addBookmark(newBookmark);
         store.adding = false;
         render();
@@ -316,8 +304,6 @@ const handleUpdateBookmarkSubmit = function() {
     editedBookmark.url = $(".bookmark-url").val();
     editedBookmark.desc = $(".bookmark-desc").val();
     editedBookmark.rating = $('input[name="rating"]:checked').val();
-
-    console.log(editedBookmark);
 
     api.updateBookmark(id, editedBookmark)
       .then(() => {
